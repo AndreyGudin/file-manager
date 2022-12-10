@@ -2,6 +2,7 @@ import { argv } from "node:process";
 import { stdin, exit } from "process";
 import { homedir } from "node:os";
 import { join } from "path";
+import { readdir } from "node:fs/promises";
 import url from "url";
 
 const printCurrentWorkingDirectory = (path) =>
@@ -20,6 +21,22 @@ const changeDirectory = (path, currentPath) => {
   printCurrentWorkingDirectory(newPath);
   return newPath;
 };
+
+const listFilesInDirectory = async (path) => {
+  try {
+    const files = await readdir(path,{withFileTypes: true});
+    const result = [];
+    let i = 0;
+    console.log(`Index Name Type`);
+    for (const file of files) {
+      let type =file.isFile() ? "file" : "directory";
+      result.push({name: file.name, type});
+    }
+    console.table(result);
+  } catch (error) {
+    console.log("FS operation failed");
+  }
+}
 
 const fileManager = () => {
   const username = argv[2].split("=")[1];
@@ -46,6 +63,9 @@ const fileManager = () => {
         let pathCD = currentPath;
         if (param) currentPath = changeDirectory(param, pathCD);
         else console.log("Invalid input");
+        break;
+      case "ls":
+        listFilesInDirectory(currentPath);
         break;
       default:
         console.log("Invalid input");
