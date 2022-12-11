@@ -11,6 +11,7 @@ import {
   readFileAndPrint,
   createEmptyFile,
   renameFile,
+  copyFileTo
 } from "./utils.js";
 
 const fileManager = async () => {
@@ -56,6 +57,11 @@ const fileManager = async () => {
       case "rn":
         let pathRn = currentPath;
         if (param2) await renameFile(param2, param, pathRn);
+        else console.log("Invalid input");
+        break;
+      case "cp":
+        let pathCp = currentPath;
+        if (param2) await copyFileTo(param2, param, pathCp);
         else console.log("Invalid input");
         break;
       default:
