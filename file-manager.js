@@ -8,19 +8,20 @@ import {
   folderUp,
   changeDirectory,
   listFilesInDirectory,
+  readFileAndPrint
 } from "./utils.js";
 
 const fileManager = () => {
   const username = argv[2].split("=")[1];
   const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
   const __homepage = url.fileURLToPath(new URL(".", `file://${homedir()}`));
+  let currentPath = __homepage;
   console.log(`Welcome to the File Manager ${username}!`);
   printCurrentWorkingDirectory(__homepage);
   console.log("Enter command");
   stdin.on("data", (data) => {
     const command = data.toString().trim().split(" ")[0];
     const param = data.toString().trim().split(" ")[1];
-    let currentPath = __homepage;
     console.log("Enter command");
 
     switch (command) {
@@ -38,6 +39,11 @@ const fileManager = () => {
         break;
       case "ls":
         listFilesInDirectory(currentPath);
+        break;
+      case "cat":
+        let pathCat = currentPath;
+        if (param) readFileAndPrint(param, pathCat);
+        else console.log("Invalid input");
         break;
       default:
         console.log("Invalid input");

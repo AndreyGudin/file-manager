@@ -1,6 +1,5 @@
-import { platform } from "node:os";
-import { join } from "path";
-import { readdir } from "node:fs/promises";
+import { join, isAbsolute } from "path";
+import { readdir, open } from "node:fs/promises";
 import url from "url";
 
 const printCurrentWorkingDirectory = (path) =>console.log(`You are currently in ${path}`);
@@ -11,28 +10,25 @@ const folderUp = (dir) => {
   return newPath;
 };
 
-const changeDirectory = (path, currentPath) => {
-  const platformOS = platform();
-  let isAbsolutePath = false;
-  if (platformOS === "win32") {
-    isAbsolutePath = path.split(":").length > 1 ? true : false;
-  } else {
-    isAbsolutePath = path.split("")[0] === "/" ? true : false;
-  }
+const createPath = (path, currentPath) => {
   const pathChanged = join(currentPath, path);
-  const newPath = isAbsolutePath
-    ? url.fileURLToPath(new URL(".", `file://${path}`))
-    : url.fileURLToPath(new URL(".", `file://${pathChanged}`));
+  const newPath = isAbsolute(path)
+    ? url.fileURLToPath(new URL("", `file://${path}`))
+    : url.fileURLToPath(new URL("", `file://${pathChanged}`));
+  return newPath;
+}
+
+const changeDirectory = (path, currentPath) => {
+  const newPath = createPath(path, currentPath);
   printCurrentWorkingDirectory(newPath);
   return newPath;
 };
 
 const listFilesInDirectory = async (path) => {
   try {
+    console.log("path ", path);
     const files = await readdir(path, { withFileTypes: true });
     const result = [];
-    let i = 0;
-    console.log(`Index Name Type`);
     for (const file of files) {
       let type = file.isFile() ? "file" : "directory";
       result.push({ name: file.name, type });
@@ -43,4 +39,17 @@ const listFilesInDirectory = async (path) => {
   }
 };
 
-export {printCurrentWorkingDirectory, folderUp, changeDirectory, listFilesInDirectory}
+const readFileAndPrint = async (path, currentPath) => {
+  try {
+    const newPath = createPath(path, currentPath);
+    const file = await open(newPath);
+    let data = "";
+    const stream = file.createReadStream();
+    stream.on("data", (chunk) => (data += chunk));
+    stream.on("end", () => console.log(data));
+  } catch (error) {
+    console.log("FS operation failed");
+  }
+}
+
+export {printCurrentWorkingDirectory, folderUp, changeDirectory, listFilesInDirectory, readFileAndPrint}
