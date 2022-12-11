@@ -1,6 +1,6 @@
 import { argv } from "node:process";
 import { stdin, exit } from "process";
-import { homedir } from "node:os";
+import { homedir, platform } from "node:os";
 import { join } from "path";
 import { readdir } from "node:fs/promises";
 import url from "url";
@@ -15,7 +15,13 @@ const folderUp = (dir) => {
 };
 
 const changeDirectory = (path, currentPath) => {
-  const isAbsolutePath = path.split(":").length > 1 ? true : false;
+  const platformOS = platform();
+  let isAbsolutePath = false;
+  if (platformOS === "win32") {
+    isAbsolutePath = path.split(":").length > 1 ? true : false;
+  } else {
+    isAbsolutePath = path.split("")[0] === "/" ? true : false;
+  }
   const pathChanged = join(currentPath, path);
   const newPath = isAbsolutePath ? url.fileURLToPath(new URL(".", `file://${path}`)) : url.fileURLToPath(new URL(".", `file://${pathChanged}`));
   printCurrentWorkingDirectory(newPath);
