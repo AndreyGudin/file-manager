@@ -1,8 +1,9 @@
 import { join, isAbsolute } from "path";
-import { readdir, open } from "node:fs/promises";
+import { readdir, open, writeFile } from "node:fs/promises";
 import url from "url";
 
-const printCurrentWorkingDirectory = (path) =>console.log(`You are currently in ${path}`);
+const printCurrentWorkingDirectory = (path) =>
+  console.log(`You are currently in ${path}`);
 
 const folderUp = (dir) => {
   const newPath = url.fileURLToPath(new URL("..", `file://${dir}`));
@@ -16,7 +17,7 @@ const createPath = (path, currentPath) => {
     ? url.fileURLToPath(new URL("", `file://${path}`))
     : url.fileURLToPath(new URL("", `file://${pathChanged}`));
   return newPath;
-}
+};
 
 const changeDirectory = (path, currentPath) => {
   const newPath = createPath(path, currentPath);
@@ -26,7 +27,6 @@ const changeDirectory = (path, currentPath) => {
 
 const listFilesInDirectory = async (path) => {
   try {
-    console.log("path ", path);
     const files = await readdir(path, { withFileTypes: true });
     const result = [];
     for (const file of files) {
@@ -50,6 +50,23 @@ const readFileAndPrint = async (path, currentPath) => {
   } catch (error) {
     console.log("FS operation failed");
   }
-}
+};
 
-export {printCurrentWorkingDirectory, folderUp, changeDirectory, listFilesInDirectory, readFileAndPrint}
+const createEmptyFile = async (path, currentPath) => {
+  try {
+    const newPath = createPath(path, currentPath);
+    await writeFile(newPath, "", { flag: "wx" });
+    console.log("Success");
+  } catch (error) {
+    console.log("FS operation failed");
+  }
+};
+
+export {
+  printCurrentWorkingDirectory,
+  folderUp,
+  changeDirectory,
+  listFilesInDirectory,
+  readFileAndPrint,
+  createEmptyFile,
+};

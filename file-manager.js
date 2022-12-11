@@ -8,7 +8,8 @@ import {
   folderUp,
   changeDirectory,
   listFilesInDirectory,
-  readFileAndPrint
+  readFileAndPrint,
+  createEmptyFile
 } from "./utils.js";
 
 const fileManager = () => {
@@ -43,6 +44,11 @@ const fileManager = () => {
       case "cat":
         let pathCat = currentPath;
         if (param) readFileAndPrint(param, pathCat);
+        else console.log("Invalid input");
+        break;
+      case "add":
+        let pathAdd = currentPath;
+        if (param) createEmptyFile(param, pathAdd);
         else console.log("Invalid input");
         break;
       default:
