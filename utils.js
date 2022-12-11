@@ -1,5 +1,5 @@
-import { join, isAbsolute } from "path";
-import { readdir, open, writeFile } from "node:fs/promises";
+import { join, isAbsolute, parse } from "path";
+import { readdir, open, writeFile, rename } from "node:fs/promises";
 import url from "url";
 
 const printCurrentWorkingDirectory = (path) =>
@@ -62,6 +62,19 @@ const createEmptyFile = async (path, currentPath) => {
   }
 };
 
+const renameFile = async (newName, pathToFile, currentPath) => {
+  try {
+    const oldPath = parse(createPath(pathToFile, currentPath));
+    const newPath = join(oldPath.dir, newName);
+    const newNameFile = url.fileURLToPath(new URL("", `file://${newPath}`));
+    const oldNameFile = createPath(pathToFile, currentPath);
+    await rename(oldNameFile, newNameFile);
+    console.log("Success!");
+  } catch (error) {
+    console.log("FS operation failed");
+  }
+};
+
 export {
   printCurrentWorkingDirectory,
   folderUp,
@@ -69,4 +82,5 @@ export {
   listFilesInDirectory,
   readFileAndPrint,
   createEmptyFile,
+  renameFile,
 };

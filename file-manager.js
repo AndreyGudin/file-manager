@@ -9,10 +9,11 @@ import {
   changeDirectory,
   listFilesInDirectory,
   readFileAndPrint,
-  createEmptyFile
+  createEmptyFile,
+  renameFile,
 } from "./utils.js";
 
-const fileManager = () => {
+const fileManager = async () => {
   const username = argv[2].split("=")[1];
   const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
   const __homepage = url.fileURLToPath(new URL(".", `file://${homedir()}`));
@@ -20,9 +21,10 @@ const fileManager = () => {
   console.log(`Welcome to the File Manager ${username}!`);
   printCurrentWorkingDirectory(__homepage);
   console.log("Enter command");
-  stdin.on("data", (data) => {
+  stdin.on("data", async (data) => {
     const command = data.toString().trim().split(" ")[0];
     const param = data.toString().trim().split(" ")[1];
+    const param2 = data.toString().trim().split(" ")[2];
     console.log("Enter command");
 
     switch (command) {
@@ -49,6 +51,11 @@ const fileManager = () => {
       case "add":
         let pathAdd = currentPath;
         if (param) createEmptyFile(param, pathAdd);
+        else console.log("Invalid input");
+        break;
+      case "rn":
+        let pathRn = currentPath;
+        if (param2) await renameFile(param2, param, pathRn);
         else console.log("Invalid input");
         break;
       default:
