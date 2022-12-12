@@ -1,5 +1,12 @@
 import { join, isAbsolute, parse } from "path";
-import { readdir, open, writeFile, rename, copyFile } from "node:fs/promises";
+import {
+  readdir,
+  open,
+  writeFile,
+  rename,
+  copyFile,
+  rm,
+} from "node:fs/promises";
 import { constants } from "node:fs";
 import url from "url";
 
@@ -59,7 +66,7 @@ const createEmptyFile = async (path, currentPath) => {
     await writeFile(newPath, "", { flag: "wx" });
     console.log("Success");
   } catch (error) {
-    console.log("FS operation failed");
+    console.log(error);
   }
 };
 
@@ -78,14 +85,36 @@ const renameFile = async (newName, pathToFile, currentPath) => {
 
 const copyFileTo = async (pathToNewDir, pathToDir, currentPath) => {
   try {
+    const fileName = parse(createPath(pathToDir, currentPath));
+    const newPath = join(createPath(pathToNewDir, currentPath),fileName.base);
     const oldPath = createPath(pathToDir, currentPath);
-    const newPath = createPath(pathToNewDir, currentPath);
     await copyFile(oldPath, newPath, constants.COPYFILE_EXCL);
     console.log("Success!");
   } catch (error) {
     console.log("FS operation failed");
   }
-}
+};
+
+const moveFile = async (pathToNewDir, pathToDir, currentPath) => {
+  try {
+    await copyFileTo(pathToNewDir, pathToDir, currentPath);
+    const oldPath = createPath(pathToDir, currentPath);
+    await rm(oldPath);
+    console.log("Success!");
+  } catch (error) {
+    console.log("FS operation failed");
+  }
+};
+
+const deleteFile = async (pathToFile, currentPath) => {
+  try {
+    const newPath = createPath(pathToFile, currentPath);
+    await rm(newPath);
+    console.log("Success!");
+  } catch (error) {
+    console.log("FS operation failed");
+  }
+};
 
 export {
   printCurrentWorkingDirectory,
@@ -95,5 +124,7 @@ export {
   readFileAndPrint,
   createEmptyFile,
   renameFile,
-  copyFileTo
+  copyFileTo,
+  moveFile,
+  deleteFile
 };
