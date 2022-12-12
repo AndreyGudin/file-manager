@@ -7,9 +7,9 @@ import {
   copyFile,
   rm,
 } from "node:fs/promises";
+import { EOL, cpus, homedir, userInfo, arch  } from "node:os";
 import { constants } from "node:fs";
 import url from "url";
-
 const printCurrentWorkingDirectory = (path) =>
   console.log(`You are currently in ${path}`);
 
@@ -116,6 +116,29 @@ const deleteFile = async (pathToFile, currentPath) => {
   }
 };
 
+const getOsInfo = (key) => {
+  switch (key) {
+    case "--EOL":
+      console.log("EOL: ",EOL.split(""));
+      break;
+    case "--cpus":
+      console.log("CPUS: ", cpus());
+      break;
+    case "--homedir":
+      console.log("Home directory: ", homedir());
+      break;
+    case "--username":
+      console.log("Username: ", userInfo().username);
+      break;
+    case "--architecture":
+      console.log("Architecture: ", arch());
+      break;
+    default:
+      console.log("Invalid input");
+      break;
+  }
+}
+
 export {
   printCurrentWorkingDirectory,
   folderUp,
@@ -126,5 +149,6 @@ export {
   renameFile,
   copyFileTo,
   moveFile,
-  deleteFile
+  deleteFile,
+  getOsInfo
 };

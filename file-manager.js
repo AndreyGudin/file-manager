@@ -14,6 +14,7 @@ import {
   copyFileTo,
   moveFile,
   deleteFile,
+  getOsInfo
 } from "./utils.js";
 
 const fileManager = async () => {
@@ -74,6 +75,10 @@ const fileManager = async () => {
       case "rm":
         let pathRm = currentPath;
         if (param) await deleteFile(param, pathRm);
+        else console.log("Invalid input");
+        break;
+      case "os":
+        if (param) getOsInfo(param);
         else console.log("Invalid input");
         break;
       default:
