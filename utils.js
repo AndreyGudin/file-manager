@@ -8,8 +8,11 @@ import {
   rm,
 } from "node:fs/promises";
 import { EOL, cpus, homedir, userInfo, arch  } from "node:os";
-import { constants } from "node:fs";
+import { constants, createReadStream } from "node:fs";
+import { createHash } from "node:crypto";
 import url from "url";
+
+
 const printCurrentWorkingDirectory = (path) =>
   console.log(`You are currently in ${path}`);
 
@@ -139,6 +142,19 @@ const getOsInfo = (key) => {
   }
 }
 
+const calculateHash = async (pathToFile, currentPath) => {
+  const FILE = createPath(pathToFile, currentPath);
+  const stream = createReadStream(FILE);
+  const hash = createHash("sha256");
+  stream.on("readable", () => {
+    const data = stream.read();
+    if (data) hash.update(data);
+    else {
+      console.log(`${hash.digest("hex")}`);
+    }
+  });
+};
+
 export {
   printCurrentWorkingDirectory,
   folderUp,
@@ -150,5 +166,6 @@ export {
   copyFileTo,
   moveFile,
   deleteFile,
-  getOsInfo
+  getOsInfo,
+  calculateHash
 };

@@ -14,7 +14,8 @@ import {
   copyFileTo,
   moveFile,
   deleteFile,
-  getOsInfo
+  getOsInfo,
+  calculateHash
 } from "./utils.js";
 
 const fileManager = async () => {
@@ -79,6 +80,11 @@ const fileManager = async () => {
         break;
       case "os":
         if (param) getOsInfo(param);
+        else console.log("Invalid input");
+        break;
+      case "hash":
+        let pathHash = currentPath;
+        if (param) await calculateHash(param, pathHash);
         else console.log("Invalid input");
         break;
       default:
