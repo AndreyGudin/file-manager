@@ -8,7 +8,8 @@ import {
   rm,
 } from "node:fs/promises";
 import { EOL, cpus, homedir, userInfo, arch  } from "node:os";
-import { constants, createReadStream } from "node:fs";
+import { constants, createReadStream, createWriteStream } from "node:fs";
+import { createBrotliCompress, createBrotliDecompress } from "node:zlib";
 import { createHash } from "node:crypto";
 import url from "url";
 
@@ -155,6 +156,38 @@ const calculateHash = async (pathToFile, currentPath) => {
   });
 };
 
+const compressBrotli = async (pathToFile, pathToDest,currentPath) => {
+  try {
+    const FILE = createPath(pathToFile, currentPath);
+    const fileName = parse(FILE);
+    const archPath = join(createPath(pathToDest, currentPath),`${fileName.name}${fileName.ext}.br`);
+    const bzip = createBrotliCompress();
+    const rstream = createReadStream(FILE);
+    const wstream = createWriteStream(archPath);
+    rstream.pipe(bzip).pipe(wstream);
+    console.log("Success");
+  } catch (error) {
+    console.log("FS operation failed");
+  }
+
+};
+
+const decompressBrotli = async (pathToFile, pathToDest,currentPath) => {
+  try {
+    const ARCHIVE = createPath(pathToFile, currentPath);
+    const fileName = parse(ARCHIVE);
+    const filePath = join(createPath(pathToDest, currentPath),`${fileName.name}`);
+    const debzip = createBrotliDecompress();
+    const rstream = createReadStream(ARCHIVE);
+    const wstream = createWriteStream(filePath);
+    rstream.pipe(debzip).pipe(wstream);
+    console.log("Success");
+  } catch (error) {
+    console.log("FS operation failed");
+  }
+  
+};
+
 export {
   printCurrentWorkingDirectory,
   folderUp,
@@ -167,5 +200,7 @@ export {
   moveFile,
   deleteFile,
   getOsInfo,
-  calculateHash
+  calculateHash,
+  compressBrotli,
+  decompressBrotli
 };

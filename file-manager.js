@@ -15,7 +15,9 @@ import {
   moveFile,
   deleteFile,
   getOsInfo,
-  calculateHash
+  calculateHash,
+  compressBrotli,
+  decompressBrotli
 } from "./utils.js";
 
 const fileManager = async () => {
@@ -85,6 +87,16 @@ const fileManager = async () => {
       case "hash":
         let pathHash = currentPath;
         if (param) await calculateHash(param, pathHash);
+        else console.log("Invalid input");
+        break;
+      case "compress":
+        let pathComp = currentPath;
+        if (param2) await compressBrotli(param, param2,pathComp);
+        else console.log("Invalid input");
+        break;
+      case "decompress":
+        let pathDeComp = currentPath;
+        if (param2) await decompressBrotli(param, param2,pathDeComp);
         else console.log("Invalid input");
         break;
       default:
