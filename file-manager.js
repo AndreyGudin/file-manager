@@ -3,26 +3,23 @@ import { stdin, exit } from "process";
 import { homedir } from "node:os";
 import url from "url";
 
-import {
-  printCurrentWorkingDirectory,
-  folderUp,
-  changeDirectory,
-  listFilesInDirectory,
-  readFileAndPrint,
-  createEmptyFile,
-  renameFile,
-  copyFileTo,
-  moveFile,
-  deleteFile,
-  getOsInfo,
-  calculateHash,
-  compressBrotli,
-  decompressBrotli
-} from "./utils.js";
+import { printCurrentWorkingDirectory } from "./modules/utils.js";
+import { folderUp } from "./modules/folderUp.js";
+import { changeDirectory } from "./modules/changeDirectory.js";
+import { listFilesInDirectory } from "./modules/listFilesInDirectory.js";
+import { readFileAndPrint } from "./modules/readFileAndPrint.js";
+import { createEmptyFile } from "./modules/createEmptyFile.js";
+import { renameFile } from "./modules/renameFile.js";
+import { copyFileTo } from "./modules/copyFileTo.js";
+import { moveFile } from "./modules/moveFile.js";
+import { deleteFile } from "./modules/deleteFile.js";
+import { getOsInfo } from "./modules/getOsInfo.js";
+import { calculateHash } from "./modules/calculateHash.js";
+import { compressBrotli } from "./modules/compressBrotli.js";
+import { decompressBrotli } from "./modules/decompressBrotli.js";
 
 const fileManager = async () => {
   const username = argv[2].split("=")[1];
-  const __dirname = url.fileURLToPath(new URL(".", import.meta.url));
   const __homepage = url.fileURLToPath(new URL(".", `file://${homedir()}`));
   let currentPath = __homepage;
   console.log(`Welcome to the File Manager ${username}!`);
@@ -32,8 +29,6 @@ const fileManager = async () => {
     const command = data.toString().trim().split(" ")[0];
     const param = data.toString().trim().split(" ")[1];
     const param2 = data.toString().trim().split(" ")[2];
-    console.log("Enter command");
-
     switch (command) {
       case ".exit":
         console.log(`Thank you for using File Manager, ${username}, goodbye!`);
@@ -91,19 +86,18 @@ const fileManager = async () => {
         break;
       case "compress":
         let pathComp = currentPath;
-        if (param2) await compressBrotli(param, param2,pathComp);
+        if (param2) await compressBrotli(param, param2, pathComp);
         else console.log("Invalid input");
         break;
       case "decompress":
         let pathDeComp = currentPath;
-        if (param2) await decompressBrotli(param, param2,pathDeComp);
+        if (param2) await decompressBrotli(param, param2, pathDeComp);
         else console.log("Invalid input");
         break;
       default:
         console.log("Invalid input");
         break;
     }
-
     process.on("SIGINT", () => {
       console.log(`Thank you for using File Manager, ${username}, goodbye!`);
       exit();
