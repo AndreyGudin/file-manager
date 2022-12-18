@@ -39,15 +39,15 @@ const fileManager = async () => {
         break;
       case "cd":
         let pathCD = currentPath;
-        if (param) currentPath = changeDirectory(param, pathCD);
+        if (param) currentPath = await changeDirectory(param, pathCD);
         else console.log("Invalid input");
         break;
       case "ls":
-        listFilesInDirectory(currentPath);
+        await listFilesInDirectory(currentPath);
         break;
       case "cat":
         let pathCat = currentPath;
-        if (param) readFileAndPrint(param, pathCat);
+        if (param) await readFileAndPrint(param, pathCat);
         else console.log("Invalid input");
         break;
       case "add":

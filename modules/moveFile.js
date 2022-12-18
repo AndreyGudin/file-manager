@@ -1,6 +1,7 @@
 import { rm } from "node:fs/promises";
 
 import { printCurrentWorkingDirectory, createPath } from "./utils.js";
+import { copyFileTo } from "./copyFileTo.js";
 
 export const moveFile = async (pathToNewDir, pathToDir, currentPath) => {
   try {
