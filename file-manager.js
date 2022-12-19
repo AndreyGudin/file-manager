@@ -28,7 +28,8 @@ const fileManager = async () => {
   console.log("Information:");
   console.log("/dir/dir2 or C:\\dir\\dir2 - absolute path");
   console.log("dir/dir2 or dir\\dir2 - relative path");
-  console.log("Copy or any operation with destination parameter, use symbol . - Example: cp file.txt .");
+  console.log("Copy or any operation with destination parameter, use symbol . for current path - Example: cp file.txt .");
+  console.log("Чтобы выполнить операцию в текущей папке, используйте знак . : Пример: cp file.txt .");
   console.log("\n");
   console.log("*******************************************************************");
   console.log("\n");

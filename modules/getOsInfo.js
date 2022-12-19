@@ -6,7 +6,16 @@ export const getOsInfo = (key) => {
       console.log("EOL: ", EOL.split(""));
       break;
     case "--cpus":
-      console.log("CPUS: ", cpus());
+      const cpusArr = cpus();
+      const res = cpusArr.map((cpu, i) => {
+        return {
+          [`CPU ${i + 1}`]: {
+            Model: cpu.model,
+            "Clock Rate": `${cpu.speed / 1000} GHz`,
+          },
+        };
+      });
+      console.log("CPUS: ", res);
       break;
     case "--homedir":
       console.log("Home directory: ", homedir());
