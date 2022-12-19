@@ -1,4 +1,4 @@
-import { access, constants } from 'node:fs/promises';
+import { access, constants } from "node:fs/promises";
 
 import { printCurrentWorkingDirectory, createPath } from "./utils.js";
 
@@ -12,6 +12,5 @@ export const changeDirectory = async (path, currentPath) => {
     console.log("Invalid input");
     printCurrentWorkingDirectory(currentPath);
     return currentPath;
-  }  
-  
+  }
 };
