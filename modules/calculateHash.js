@@ -15,5 +15,5 @@ export const calculateHash = async (pathToFile, currentPath) => {
       printCurrentWorkingDirectory(currentPath);
     }
   });
-  stream.on("error",(err)=> console.log("Invalid input"));
+  stream.on("error", (err) => console.log("Invalid input"));
 };
